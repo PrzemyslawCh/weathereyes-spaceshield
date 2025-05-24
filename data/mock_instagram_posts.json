@@ -1,0 +1,66 @@
+{
+  "posts": [
+    {
+      "id": "post_001",
+      "hashtags": ["#shaman2024", "#hackathon", "#warszawa"],
+      "location": "Warsaw, Poland",
+      "timestamp": "2024-01-20T14:30:00Z",
+      "image_url": "mock_images/sunny_event.jpg",
+      "description": "Amazing weather at SHAMAN hackathon! ☀️",
+      "weather_detected": "sunny",
+      "confidence": 0.95,
+      "user": "participant_1"
+    },
+    {
+      "id": "post_002", 
+      "hashtags": ["#shaman2024", "#tech", "#ai"],
+      "location": "Warsaw, Poland",
+      "timestamp": "2024-01-20T15:45:00Z",
+      "image_url": "mock_images/cloudy_venue.jpg",
+      "description": "Coding session with cloudy skies 🌤️",
+      "weather_detected": "cloudy",
+      "confidence": 0.87,
+      "user": "developer_xyz"
+    },
+    {
+      "id": "post_003",
+      "hashtags": ["#shaman2024", "#rain", "#indoor"],
+      "location": "Warsaw, Poland", 
+      "timestamp": "2024-01-20T16:20:00Z",
+      "image_url": "mock_images/rainy_outside.jpg",
+      "description": "Rain started! Good we're coding inside 🌧️",
+      "weather_detected": "rainy",
+      "confidence": 0.92,
+      "user": "hackathon_team"
+    },
+    {
+      "id": "post_004",
+      "hashtags": ["#shaman2024", "#sunset", "#evening"],
+      "location": "Warsaw, Poland",
+      "timestamp": "2024-01-20T18:00:00Z", 
+      "image_url": "mock_images/clear_evening.jpg",
+      "description": "Beautiful clear evening for final presentations! 🌅",
+      "weather_detected": "clear",
+      "confidence": 0.89,
+      "user": "team_lead"
+    },
+    {
+      "id": "post_005",
+      "hashtags": ["#shaman2024", "#snow", "#winter"],
+      "location": "Warsaw, Poland",
+      "timestamp": "2024-01-20T19:30:00Z",
+      "image_url": "mock_images/snowy_night.jpg", 
+      "description": "Snow! Perfect end to hackathon day ❄️",
+      "weather_detected": "snow",
+      "confidence": 0.94,
+      "user": "weather_enthusiast"
+    }
+  ],
+  "metadata": {
+    "total_posts": 5,
+    "date_range": "2024-01-20",
+    "location": "Warsaw, Poland",
+    "event": "SHAMAN 2024 Hackathon",
+    "weather_conditions": ["sunny", "cloudy", "rainy", "clear", "snow"]
+  }
+} 

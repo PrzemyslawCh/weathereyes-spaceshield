@@ -1,0 +1,90 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+.env
+*.pyc
+__pycache__/
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+
+# API Keys and Secrets
+config.env
+secrets.json
+api_keys.txt
+credentials.json
+
+# Data files (may contain personal images)
+data/event_images/
+data/uploaded_images/
+data/*.jpg
+data/*.jpeg
+data/*.png
+data/*.gif
+data/*.mp4
+
+# Results and logs
+data/analysis_results.json
+data/demo_results.json
+logs/
+*.log
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pytest
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Streamlit
+.streamlit/
+
+# MacOS
+.AppleDouble
+.LSOverride 
