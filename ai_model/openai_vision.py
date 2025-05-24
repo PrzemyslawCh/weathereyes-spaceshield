@@ -11,6 +11,7 @@ from typing import Dict, List, Optional
 import requests
 from pathlib import Path
 from dotenv import load_dotenv
+import random
 
 load_dotenv()
 
@@ -23,10 +24,10 @@ class OpenAIVisionAnalyzer:
         self.weather_prompt = """
         Przeanalizuj to zdjęcie i określ warunki pogodowe. 
         
-        Zwróć odpowiedź w formacie JSON z następującymi polami:
+        BARDZO WAŻNE: Zwróć odpowiedź w formacie JSON z następującymi polami:
         {
             "weather_condition": "sunny|cloudy|rainy|snow|stormy|foggy|clear",
-            "confidence": 0.95,
+            "confidence": [LICZBA OD 0.0 DO 1.0 - jak bardzo jesteś pewny swojej oceny],
             "description": "Krótki opis warunków pogodowych w języku polskim",
             "details": {
                 "sky_condition": "opis nieba",
@@ -34,8 +35,15 @@ class OpenAIVisionAnalyzer:
                 "precipitation": "brak|deszcz|śnieg|grad",
                 "lighting": "jasno|pochmurno|ciemno"
             },
-            "reasoning": "Dlaczego określiłeś takie warunki pogodowe"
+            "reasoning": "Dlaczego określiłeś takie warunki pogodowe i dlaczego taki confidence"
         }
+        
+        CONFIDENCE GUIDELINES:
+        - 0.9-1.0: Bardzo wyraźne warunki pogodowe, dobre oświetlenie, czyste zdjęcie
+        - 0.7-0.9: Jasne warunki pogodowe, dobre zdjęcie
+        - 0.5-0.7: Średnio czytelne warunki, możliwe alternatywy
+        - 0.3-0.5: Trudne do określenia, słabe oświetlenie/jakość
+        - 0.0-0.3: Bardzo trudne lub niemożliwe do określenia
         
         Skoncentruj się na:
         - Stanie nieba (czyste, pochmurne, zachmurzone)
@@ -43,7 +51,7 @@ class OpenAIVisionAnalyzer:
         - Widoczności i oświetleniu
         - Ogólnych warunkach atmosferycznych
         
-        Jeśli to zdjęcie z wnętrza, spróbuj określić pogodę na podstawie widocznych przez okna elementów lub oświetlenia.
+        MUSI ZWRÓCIĆ: poprawny JSON z confidence jako liczba (nie tekst)!
         """
     
     def encode_image(self, image_path: str) -> str:
@@ -113,13 +121,45 @@ class OpenAIVisionAnalyzer:
             # Parse JSON response
             try:
                 weather_data = json.loads(content)
+                
+                # Walidacja i normalizacja confidence
+                if 'confidence' in weather_data:
+                    conf = weather_data['confidence']
+                    # Upewnij się że confidence jest liczbą
+                    if isinstance(conf, str):
+                        # Spróbuj wyciągnąć liczbę z tekstu
+                        import re
+                        conf_match = re.search(r'(\d+\.?\d*)', conf)
+                        if conf_match:
+                            conf = float(conf_match.group(1))
+                            # Jeśli > 1, prawdopodobnie procent (np. 85)
+                            if conf > 1:
+                                conf = conf / 100
+                        else:
+                            conf = 0.5  # Fallback
+                    
+                    # Ograniczyj do zakresu 0-1
+                    weather_data['confidence'] = max(0.0, min(1.0, float(conf)))
+                else:
+                    # Jeśli brak confidence, ustaw bazując na jakości odpowiedzi
+                    if weather_data.get('weather_condition') != 'unknown':
+                        weather_data['confidence'] = 0.7  # Umiarkowany confidence
+                    else:
+                        weather_data['confidence'] = 0.3  # Niski confidence
+                
+                # Dodaj metadata
                 weather_data['timestamp'] = datetime.now().isoformat()
                 weather_data['source'] = 'openai_vision'
                 weather_data['image_path'] = image_path
                 weather_data['model'] = 'gpt-4o'
+                weather_data['raw_response'] = content  # Zachowaj oryginalną odpowiedź
+                
+                print(f"✅ OpenAI Vision: {weather_data.get('weather_condition', 'unknown')} (confidence: {weather_data.get('confidence', 0):.2f})")
+                
                 return weather_data
                 
             except json.JSONDecodeError:
+                print(f"⚠️ OpenAI nie zwróciło JSON, parsuje tekst: {content[:100]}...")
                 # Jeśli AI nie zwróciło JSON, spróbuj wyciągnąć informacje
                 return self._extract_weather_from_text(content, image_path)
         
@@ -173,26 +213,30 @@ class OpenAIVisionAnalyzer:
         
         filename = Path(image_path).name.lower()
         
+        # Bardziej realistyczne confidence dla demo
         # Inteligentne określanie pogody na podstawie nazwy pliku
         if any(word in filename for word in ['sunny', 'sun', 'bright', 'clear']):
             weather = 'sunny'
-            conf = 0.92
+            conf = random.uniform(0.8, 0.95)  # Wysokie confidence dla jasnych warunków
         elif any(word in filename for word in ['cloud', 'overcast', 'grey']):
             weather = 'cloudy'
-            conf = 0.87
+            conf = random.uniform(0.7, 0.9)   # Średnie-wysokie dla chmur
         elif any(word in filename for word in ['rain', 'wet', 'storm']):
             weather = 'rainy'
-            conf = 0.89
+            conf = random.uniform(0.75, 0.92) # Wysokie dla deszczu (łatwo rozpoznać)
         elif any(word in filename for word in ['snow', 'winter']):
             weather = 'snow'
-            conf = 0.91
+            conf = random.uniform(0.8, 0.95)  # Wysokie dla śniegu
         else:
+            # Dla ogólnych zdjęć - symuluj trudność rozpoznania
             weather = 'cloudy'  # Domyślnie
-            conf = 0.75
+            conf = random.uniform(0.5, 0.75)  # Średnie confidence
+        
+        print(f"🎭 Demo Mode: {weather} (confidence: {conf:.2f}) - based on filename")
         
         return {
             "weather_condition": weather,
-            "confidence": conf,
+            "confidence": round(conf, 3),  # Zaokrąglij do 3 miejsc po przecinku
             "description": f"Demo analiza - wykryto {weather} na podstawie nazwy pliku",
             "details": {
                 "sky_condition": "symulacja",
@@ -200,7 +244,7 @@ class OpenAIVisionAnalyzer:
                 "precipitation": "demo",
                 "lighting": "demo"
             },
-            "reasoning": "Demo mode - analiza na podstawie nazwy pliku",
+            "reasoning": f"Demo mode - analiza na podstawie nazwy pliku ({filename}), confidence: {conf:.2f}",
             "timestamp": datetime.now().isoformat(),
             "source": "demo_openai_vision",
             "image_path": image_path,

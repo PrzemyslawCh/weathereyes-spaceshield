@@ -301,15 +301,20 @@ def show_image_analysis(images):
         analysis = analyzer.analyze_image(img_path, "SpaceShield Hackathon event weather analysis")
         analyses.append(analysis)
         
-        # Pokazanie wyniku - używamy rzeczywistego confidence
+        # Pokazanie wyniku - używamy TYLKO rzeczywistego confidence z AI
         weather = analysis.get('weather_condition', 'cloudy')
-        confidence = analysis.get('confidence', 0.50)  # Niższy fallback dla demo mode
+        confidence = analysis.get('confidence', None)  # None jeśli brak confidence
+        
+        if confidence is not None:
+            confidence_text = f"{confidence:.0%} confidence"
+        else:
+            confidence_text = "analyzing..."
         
         placeholders[i].markdown(f'''
         <div class="image-analyzed">
             <div style="text-align: center; color: #00ff00; font-weight: bold;">
                 ✅ {weather.upper()}<br>
-                {confidence:.0%} confidence
+                {confidence_text}
             </div>
         </div>
         ''', unsafe_allow_html=True)
