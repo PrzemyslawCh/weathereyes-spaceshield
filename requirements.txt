@@ -1,60 +1,47 @@
-# Core dependencies
-requests==2.31.0
-pandas==2.1.4
-numpy==1.25.2
-python-dotenv==1.0.0
+# Essential for Streamlit Cloud deployment
+streamlit>=1.28.0
+pandas>=2.2.0
+numpy>=1.26.0
+requests>=2.31.0
+python-dotenv>=1.0.0
 
-# Streamlit dashboard
-streamlit==1.28.2
-plotly==5.17.0
-
-# AI and ML
-openai==1.3.7
+# AI Analysis
+openai>=1.3.0
 
 # Image processing
-Pillow==10.1.0
+Pillow>=10.1.0
 
-# Communication APIs
-twilio==8.10.0
+# Dashboard visualization
+plotly>=5.17.0
 
-# Social media APIs (mock for now)
-# instagram-basic-display-api==1.0.0
+# Communication (for alerts simulation)
+twilio>=8.10.0
 
 # Data processing
-beautifulsoup4==4.12.2
-lxml==4.9.3
+beautifulsoup4>=4.12.0
 
 # Development
-pytest==7.4.3
+pytest>=7.4.0
 
-# Core ML & AI
+# ML & AI (simplified)
 torch>=2.0.0
 transformers>=4.35.0
-pillow>=10.0.0
-numpy>=1.24.0
 
-# Instagram & Social Media
+# Social Media
 instaloader>=4.10.0
-requests>=2.31.0
-beautifulsoup4>=4.12.0
 
 # Telegram Bot
 python-telegram-bot>=20.0
 aiohttp>=3.9.0
 
 # Dashboard & API
-streamlit>=1.28.0
 fastapi>=0.104.0
 uvicorn>=0.24.0
 
-# Data & Utils
-pandas>=2.1.0
-python-dotenv>=1.0.0
-opencv-python>=4.8.0
+# Utils
 matplotlib>=3.7.0
 seaborn>=0.12.0
 
 # Testing & Development
-pytest>=7.4.0
 black>=23.9.0
 flake8>=6.1.0 
