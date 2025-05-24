@@ -120,7 +120,26 @@ class OpenAIVisionAnalyzer:
             
             # Parse JSON response
             try:
-                weather_data = json.loads(content)
+                # OpenAI często zwraca JSON w markdown code block
+                content_clean = content.strip()
+                
+                # Usuń markdown code block jeśli jest
+                if content_clean.startswith('```json'):
+                    # Znajdź pierwszy ```json i ostatni ```
+                    start_idx = content_clean.find('```json') + 7
+                    end_idx = content_clean.rfind('```')
+                    if end_idx > start_idx:
+                        content_clean = content_clean[start_idx:end_idx].strip()
+                elif content_clean.startswith('```'):
+                    # Ogólny markdown block
+                    start_idx = content_clean.find('\n') + 1
+                    end_idx = content_clean.rfind('```')
+                    if end_idx > start_idx:
+                        content_clean = content_clean[start_idx:end_idx].strip()
+                
+                print(f"🔍 Parsing JSON: {content_clean[:100]}...")
+                
+                weather_data = json.loads(content_clean)
                 
                 # Walidacja i normalizacja confidence
                 if 'confidence' in weather_data:
@@ -158,8 +177,9 @@ class OpenAIVisionAnalyzer:
                 
                 return weather_data
                 
-            except json.JSONDecodeError:
-                print(f"⚠️ OpenAI nie zwróciło JSON, parsuje tekst: {content[:100]}...")
+            except json.JSONDecodeError as e:
+                print(f"⚠️ JSON Parse Error: {e}")
+                print(f"Raw content: {content}")
                 # Jeśli AI nie zwróciło JSON, spróbuj wyciągnąć informacje
                 return self._extract_weather_from_text(content, image_path)
         
@@ -168,40 +188,76 @@ class OpenAIVisionAnalyzer:
             return self._get_error_response(str(e))
     
     def _extract_weather_from_text(self, text: str, image_path: str) -> Dict:
-        """Wyciąga informacje o pogodzie z tekstu jeśli AI nie zwróciło JSON"""
+        """Wyciąga informacje o pogodę z tekstu jeśli AI nie zwróciło JSON"""
         
         # Podstawowe mapowanie słów kluczowych
         weather_keywords = {
-            'sunny': ['słonecznie', 'słońce', 'jasno', 'czyste niebo'],
-            'cloudy': ['pochmurno', 'chmury', 'zachmurzone'],
-            'rainy': ['deszcz', 'pada', 'mokro', 'deszczowo'],
-            'snow': ['śnieg', 'śnieżnie', 'biało'],
-            'stormy': ['burza', 'grzmoty', 'sztorm'],
-            'clear': ['czysto', 'bezchmurnie', 'przejrzyste']
+            'sunny': ['słonecznie', 'słońce', 'jasno', 'czyste niebo', 'sunny', 'clear'],
+            'cloudy': ['pochmurno', 'chmury', 'zachmurzone', 'cloudy', 'overcast'],
+            'rainy': ['deszcz', 'pada', 'mokro', 'deszczowo', 'rain', 'wet'],
+            'snow': ['śnieg', 'śnieżnie', 'biało', 'snow'],
+            'stormy': ['burza', 'grzmoty', 'sztorm', 'storm'],
+            'clear': ['czysto', 'bezchmurnie', 'przejrzyste', 'clear']
         }
         
         detected_weather = 'unknown'
         confidence = 0.5
         
         text_lower = text.lower()
+        
+        # Spróbuj wyciągnąć confidence z tekstu
+        import re
+        
+        # Szukaj confidence w różnych formatach
+        conf_patterns = [
+            r'"confidence"[:\s]*(\d+\.?\d*)',  # "confidence": 0.8
+            r'confidence[:\s]*(\d+\.?\d*)',    # confidence: 0.8  
+            r'pewn\w*[:\s]*(\d+\.?\d*)%?',     # pewność: 80% lub pewny: 0.8
+            r'(\d+\.?\d*)%?\s*confidence',     # 80% confidence
+            r'(\d+\.?\d*)%?\s*pewn',           # 80% pewności
+        ]
+        
+        for pattern in conf_patterns:
+            match = re.search(pattern, text_lower)
+            if match:
+                conf_val = float(match.group(1))
+                if conf_val > 1:  # Prawdopodobnie procent
+                    confidence = conf_val / 100
+                else:
+                    confidence = conf_val
+                confidence = max(0.0, min(1.0, confidence))
+                print(f"🔍 Extracted confidence: {confidence:.2f} from text")
+                break
+        
+        # Znajdź pogodę
         for weather, keywords in weather_keywords.items():
             for keyword in keywords:
                 if keyword in text_lower:
                     detected_weather = weather
-                    confidence = 0.7
                     break
+            if detected_weather != 'unknown':
+                break
+        
+        # Jeśli znaleziono pogodę ale nie confidence, ustaw bazując na jakości tekstu
+        if detected_weather != 'unknown' and confidence == 0.5:
+            if len([k for weather_list in weather_keywords.values() for k in weather_list if k in text_lower]) > 1:
+                confidence = 0.7  # Więcej dopasowań = wyższy confidence
+            else:
+                confidence = 0.6  # Jedno dopasowanie
+        
+        print(f"🔍 Text extraction: {detected_weather} (confidence: {confidence:.2f})")
         
         return {
             "weather_condition": detected_weather,
             "confidence": confidence,
             "description": text[:200] + "..." if len(text) > 200 else text,
             "details": {
-                "sky_condition": "nieznane",
+                "sky_condition": "wyciągnięte z tekstu",
                 "visibility": "nieznana",
                 "precipitation": "nieznane",
                 "lighting": "nieznane"
             },
-            "reasoning": "Analiza na podstawie tekstu z OpenAI",
+            "reasoning": f"Analiza na podstawie tekstu z OpenAI, confidence: {confidence:.2f}",
             "timestamp": datetime.now().isoformat(),
             "source": "openai_vision_text",
             "image_path": image_path,
