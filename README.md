@@ -1,14 +1,14 @@
 # 🌤️ WeatherEyes - AI Weather Monitoring System
 
-> **"Dane pogodowe jako sojusznik człowieka"** - SHAMAN 2024 Hackathon Project
+> **"Dane pogodowe jako sojusznik człowieka"** - SpaceShield Hackathon Project
 
 WeatherEyes to inteligentny system monitorowania pogody wykorzystujący AI do analizy zdjęć z mediów społecznościowych i generowania alertów pogodowych w czasie rzeczywistym.
 
 ## 🚀 Live Demo
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://weathereyes-shaman2024.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://weathereyes-spaceshield.streamlit.app/)
 
-**Demo Dashboard:** Uruchom `streamlit run shaman_demo_dashboard.py`
+**Demo Dashboard:** Uruchom `streamlit run spaceshield_demo_dashboard.py`
 
 ## 🎯 Główne Funkcje
 
@@ -31,8 +31,8 @@ WeatherEyes to inteligentny system monitorowania pogody wykorzystujący AI do an
 
 ### 1. Klonuj repository
 ```bash
-git clone https://github.com/yourusername/weathereyes.git
-cd weathereyes
+git clone https://github.com/yourusername/weathereyes-spaceshield.git
+cd weathereyes-spaceshield
 ```
 
 ### 2. Wirtualne środowisko
@@ -55,7 +55,7 @@ cp config.env.example config.env
 
 ### 5. Uruchom demo
 ```bash
-streamlit run shaman_demo_dashboard.py
+streamlit run spaceshield_demo_dashboard.py
 ```
 
 ## 🔑 Wymagane API Keys
@@ -72,16 +72,16 @@ from bot.real_alerts import RealAlertSystem
 
 # Analiza zdjęcia
 analyzer = OpenAIVisionAnalyzer()
-result = analyzer.analyze_image("photo.jpg", "SHAMAN 2024 event")
+result = analyzer.analyze_image("photo.jpg", "SpaceShield Hackathon event")
 
 # Wysłanie alertu
 alerts = RealAlertSystem()
 alerts.send_weather_alert(result['weather_condition'], "Event participants")
 ```
 
-## 🎯 SHAMAN 2024 Demo
+## 🎯 SpaceShield Hackathon Demo
 
-System został zademonstrowany na hackathonie SHAMAN 2024 z:
+System został zademonstrowany na hackathonie SpaceShield z:
 - ✅ Prawdziwymi zdjęciami z wydarzenia
 - ✅ Live AI analysis przez OpenAI
 - ✅ Rzeczywistymi alertami przez Telegram
@@ -92,28 +92,28 @@ System został zademonstrowany na hackathonie SHAMAN 2024 z:
 ### Streamlit Community Cloud
 1. Fork tego repo
 2. Połącz z [Streamlit Cloud](https://streamlit.io/cloud)
-3. Deploy app: `shaman_demo_dashboard.py`
+3. Deploy app: `spaceshield_demo_dashboard.py`
 4. Dodaj environment variables (API keys)
 
 ### Lokalne uruchomienie
 ```bash
-streamlit run shaman_demo_dashboard.py --server.port 8502
+streamlit run spaceshield_demo_dashboard.py --server.port 8502
 ```
 
 ## 📁 Struktura Projektu
 
 ```
 weathereyes/
-├── shaman_demo_dashboard.py    # 🎮 Main demo dashboard
+├── spaceshield_demo_dashboard.py  # 🎮 Main demo dashboard
 ├── ai_model/
-│   └── openai_vision.py       # 🤖 AI weather analysis
+│   └── openai_vision.py          # 🤖 AI weather analysis
 ├── bot/
-│   └── real_alerts.py         # 📱 Alert system
+│   └── real_alerts.py            # 📱 Alert system
 ├── data/
-│   ├── event_images/          # 📸 Event photos (excluded from git)
-│   └── demo_images/           # 🎭 Demo images
-├── requirements.txt           # 📦 Dependencies
-└── config.env.example        # ⚙️ Configuration template
+│   ├── event_images/             # 📸 Event photos (excluded from git)
+│   └── demo_images/              # 🎭 Demo images
+├── requirements.txt              # 📦 Dependencies
+└── config.env.example           # ⚙️ Configuration template
 ```
 
 ## 🤝 Contributing
@@ -127,11 +127,11 @@ weathereyes/
 
 MIT License - Zobacz [LICENSE](LICENSE) file
 
-## 🏆 SHAMAN 2024
+## 🏆 SpaceShield Hackathon
 
-Projekt stworzony na hackathon **SHAMAN 2024** w kategorii:
+Projekt stworzony na hackathon **SpaceShield Hackathon** w kategorii:
 **"Dane pogodowe jako sojusznik człowieka"**
 
 ---
 
-**Made with ❤️ for SHAMAN 2024 Hackathon** 
+**Made with ❤️ for SpaceShield Hackathon** 

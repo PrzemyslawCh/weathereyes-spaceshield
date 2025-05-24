@@ -1,5 +1,5 @@
 """
-WeatherEyes - SHAMAN 2024 Demo Dashboard
+WeatherEyes - SpaceShield Hackathon Demo Dashboard
 Mega prosty dashboard pokazujący cały workflow na żywo
 """
 
@@ -19,7 +19,7 @@ from bot.real_alerts import RealAlertSystem
 
 # Page config
 st.set_page_config(
-    page_title="WeatherEyes - SHAMAN 2024 Live Demo",
+    page_title="WeatherEyes - SpaceShield Hackathon Live Demo",
     page_icon="🌤️",
     layout="wide"
 )
@@ -65,7 +65,7 @@ st.markdown("""
 def main():
     # Header
     st.markdown('<div class="big-title">🌤️ WeatherEyes - LIVE DEMO</div>', unsafe_allow_html=True)
-    st.markdown('<div style="text-align: center; font-size: 18px; color: #666; margin-bottom: 30px;">SHAMAN 2024 - "Dane pogodowe jako sojusznik człowieka"</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; font-size: 18px; color: #666; margin-bottom: 30px;">SpaceShield Hackathon - "Dane pogodowe jako sojusznik człowieka"</div>', unsafe_allow_html=True)
     
     # Główny workflow
     col1, col2, col3, col4 = st.columns(4)
@@ -100,7 +100,7 @@ def main():
             if file_path.suffix.lower() in ['.jpg', '.jpeg', '.png', '.bmp', '.gif']:
                 images.append(str(file_path))
         if images:
-            source_label = "SHAMAN 2024 Event"
+            source_label = "SpaceShield Hackathon Event"
     
     # Jeśli brak prawdziwych, użyj demo
     if not images and demo_dir.exists():
@@ -112,7 +112,7 @@ def main():
     
     if not images:
         st.error("🚫 Brak zdjęć! Dodaj zdjęcia do folderu data/event_images/ lub data/demo_images/")
-        st.info("💡 Tip: Skopiuj zdjęcia z wydarzenia SHAMAN 2024 do folderu data/event_images/")
+        st.info("💡 Tip: Skopiuj zdjęcia z wydarzenia SpaceShield Hackathon do folderu data/event_images/")
         st.stop()
     
     # Status OpenAI API
@@ -139,7 +139,7 @@ def run_live_demo(images, use_real_api):
     progress.progress(25)
     
     st.markdown('<div class="step-box">', unsafe_allow_html=True)
-    st.markdown("**🔍 Scanning Instagram Stories from SHAMAN 2024...**")
+    st.markdown("**🔍 Scanning Instagram Stories from SpaceShield Hackathon...**")
     
     col1, col2, col3 = st.columns(3)
     for i, img_path in enumerate(images[:3]):
@@ -149,7 +149,7 @@ def run_live_demo(images, use_real_api):
             except:
                 st.write(f"📷 {Path(img_path).name}")
     
-    st.markdown(f"✅ **Found {len(images)} images from SHAMAN event**")
+    st.markdown(f"✅ **Found {len(images)} images from SpaceShield event**")
     st.markdown('</div>', unsafe_allow_html=True)
     
     time.sleep(2)
@@ -167,7 +167,7 @@ def run_live_demo(images, use_real_api):
         analyzer.api_key = 'demo_key'
     
     # Analyze images
-    context = "Zdjęcia z wydarzenia SHAMAN 2024 - hackathon technologiczny w Polsce"
+    context = "Zdjęcia z wydarzenia SpaceShield Hackathon - hackathon technologiczny w Polsce"
     analyses = []
     
     analysis_container = st.empty()
@@ -232,7 +232,7 @@ def run_live_demo(images, use_real_api):
         
         summary_alert = {
             'type': 'daily_summary',
-            'title': '📊 SHAMAN 2024 Weather Report',
+            'title': '📊 SpaceShield Hackathon Weather Report',
             'weather': summary['dominant_weather'],
             'confidence': f"{summary['confidence']:.1%}",
             'images': summary['valid_analyses'],
@@ -253,7 +253,7 @@ def run_live_demo(images, use_real_api):
             'title': '⚠️ Weather Condition Change',
             'from_weather': weather_types[0],
             'to_weather': weather_types[1],
-            'message': f"Weather conditions changed from {weather_types[0]} to {weather_types[1]} during SHAMAN event."
+            'message': f"Weather conditions changed from {weather_types[0]} to {weather_types[1]} during SpaceShield event."
         }
         alerts_generated.append(change_alert)
         st.markdown("✅ Weather change alert created")
@@ -264,11 +264,11 @@ def run_live_demo(images, use_real_api):
     
     event_alert = {
         'type': 'event_alert',
-        'title': '🎯 SHAMAN 2024 Event Weather',
-        'event': 'SHAMAN Finał',
+        'title': '🎯 SpaceShield Hackathon Event Weather',
+        'event': 'SpaceShield Finał',
         'weather': summary.get('dominant_weather', 'unknown'),
         'recommendation': '🌂 Check weather before heading out!' if summary.get('dominant_weather') == 'rainy' else '👍 Good conditions for the event!',
-        'message': f"Weather forecast for SHAMAN finale: {summary.get('dominant_weather', 'unknown')} conditions expected."
+        'message': f"Weather forecast for SpaceShield finale: {summary.get('dominant_weather', 'unknown')} conditions expected."
     }
     alerts_generated.append(event_alert)
     st.markdown("✅ Event-specific alert created")
@@ -309,7 +309,7 @@ def run_live_demo(images, use_real_api):
     status.markdown("### ✅ DEMO COMPLETED!")
     
     st.markdown('<div class="result-box">', unsafe_allow_html=True)
-    st.markdown("**🎉 WeatherEyes Successfully Analyzed SHAMAN 2024 Event!**")
+    st.markdown("**🎉 WeatherEyes Successfully Analyzed SpaceShield Hackathon Event!**")
     
     col1, col2 = st.columns(2)
     
