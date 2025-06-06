@@ -11,6 +11,8 @@ The project has been cleaned and optimized to include only working components:
 ```
 weathereyes/
 ├── spaceshield_demo_dashboard.py    # Main demo dashboard (entry point)
+├── modal_integration.py             # Modal serverless deployment
+├── modal_client_example.py          # Example client for Modal API
 ├── ai_model/
 │   ├── __init__.py                  # Package initialization
 │   └── openai_vision.py             # OpenAI Vision API integration for weather analysis
@@ -26,6 +28,7 @@ weathereyes/
 ├── requirements.txt                 # Project dependencies
 ├── README.md                        # Project overview
 ├── PROJECT_DOCUMENTATION.md         # This file - detailed documentation
+├── MODAL_DEPLOYMENT_GUIDE.md        # Guide for Modal serverless deployment
 └── .gitignore                       # Git configuration
 ```
 
@@ -51,6 +54,13 @@ weathereyes/
   - Email notifications
   - Web dashboard updates
 
+### 4. **Modal Integration** (`modal_integration.py`)
+- Serverless deployment option
+- Auto-scaling weather analysis
+- Scheduled monitoring jobs
+- REST API endpoints
+- Cost-effective cloud execution
+
 ## 📦 Dependencies
 
 The project uses minimal dependencies for optimal performance:
@@ -62,6 +72,7 @@ The project uses minimal dependencies for optimal performance:
 - **Pillow**: Image processing
 - **python-telegram-bot**: Telegram notifications (optional)
 - **twilio**: SMS notifications (optional)
+- **modal**: Serverless deployment (optional)
 
 ## ⚙️ Setup Instructions
 
@@ -100,6 +111,22 @@ Place image files (JPG, PNG) in the `data/demo_images/` folder for the demo to a
 streamlit run spaceshield_demo_dashboard.py
 ```
 
+## 🚀 Deployment Options
+
+### Local/Streamlit Cloud
+Follow the setup instructions above for local deployment or deploy to Streamlit Cloud.
+
+### Modal Serverless (Recommended for Production)
+```bash
+# Install Modal
+pip install modal
+
+# Deploy to Modal
+modal deploy modal_integration.py
+```
+
+See `MODAL_DEPLOYMENT_GUIDE.md` for detailed Modal deployment instructions.
+
 ## 🎮 Using the Demo
 
 1. **Launch the Dashboard**: Run the Streamlit app
@@ -118,13 +145,16 @@ streamlit run spaceshield_demo_dashboard.py
 - **Smart Alerts**: Context-aware notifications based on conditions
 - **Multi-channel**: Supports various notification methods
 - **Event-specific**: Tailored alerts for specific events/locations
+- **Serverless Ready**: Deploy with Modal for unlimited scale
 
 ## 📊 API Modes
 
-The system can operate in two modes:
+The system can operate in multiple modes:
 
 1. **Live Mode**: Uses real OpenAI API for actual analysis
 2. **Demo Mode**: Simulates analysis when API key is not provided
+3. **Serverless Mode**: Runs on Modal cloud infrastructure
+4. **API Mode**: Exposed as REST API for integrations
 
 ## 🛠️ Extending the Project
 
@@ -133,6 +163,7 @@ To add new features:
 1. **New Weather Conditions**: Modify `openai_vision.py` to detect additional weather types
 2. **New Alert Channels**: Add distribution methods in `real_alerts.py`
 3. **Custom UI**: Modify `spaceshield_demo_dashboard.py` for new interface elements
+4. **API Endpoints**: Add new functions to `modal_integration.py`
 
 ## 🤝 Contributing
 
@@ -147,6 +178,7 @@ To add new features:
 - Ensure you have valid API keys for full functionality
 - Add actual weather images to `data/demo_images/` for best results
 - The system is designed to be production-ready with minimal modifications
+- Modal deployment enables unlimited scaling without infrastructure management
 
 ---
 

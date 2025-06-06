@@ -8,3 +8,6 @@ Pillow>=10.1.0
 # Optional for enhanced functionality
 python-telegram-bot>=20.0  # For Telegram alerts
 twilio>=8.10.0  # For SMS alerts (optional)
+
+# Modal deployment (optional)
+modal>=0.56.0  # For serverless deployment
