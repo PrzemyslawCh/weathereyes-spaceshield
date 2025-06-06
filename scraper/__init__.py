@@ -1,1 +1,0 @@
-# WeatherEyes Scraper Module 
